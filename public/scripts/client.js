@@ -1,32 +1,35 @@
 var app = angular.module('GiphyApp', []);
 
-app.controller('GiphyController', function($http){
+app.controller('GiphyController', function(gifService){
   console.log('GiphyController Loaded');
 
-  var RANDOMAPI = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC'
   // dc6zaTOxFJmzC
   var ctrl = this;
 
   ctrl.giphyList = [];
 
-  ctrl.random = function() {
-    $http.get(RANDOMAPI).then(function(response){
-      console.log('Gif ', response);
-      ctrl.giphyList.push(response.data.data.image_original_url);
-      console.log(ctrl.giphyList);
-    }).catch(function(err){
-      console.log('Error', err);
-    });
-  }; // end ctrl.random
+  // ctrl.random = function() {
+  //   var test = gifService.getRandom();
+  //   ctrl.giphyList = gifService.getRandom();
+  //   console.log('This is ctrl giphyList', test.$$state.value);
+  // }; // end random
+  //
+  // ctrl.giphySearch = function() {
+  //   ctrl.giphyList = gifService.gifSearch();
+  //   console.log('This is ctrl giphyList', ctrl.giphyList);
+  // }; // end giphySearch
 
-  ctrl.giphySearch = function(gifName) {
-    var searchGif = ('http://api.giphy.com/v1/gifs/search?q=' + gifName + '&api_key=dc6zaTOxFJmzC');
-    $http.get(searchGif).then(function(response){
-      ctrl.giphyList.push(response.data.data[0].images.original.url);
-      console.log(ctrl.giphyList);
-    }).catch(function(err){
-      console.log('Error', err);
-    })
-  }; // end ctrl.giphySearch
+ctrl.random = function() {
+  gifService.getRandom().then(function(randomGif) {
+    ctrl.giphyList.push(randomGif);
+  }); // end getRandom
+}; // end random
+
+ctrl.giphySearch = function(searchedGif) {
+  gifService.gifSearch(searchedGif).then(function(searchedGif) {
+    ctrl.giphyList.push(searchedGif);
+    console.log('This is giphy list', ctrl.giphyList);
+  }); // end giphySearch
+}; // end giphySearch
 
 });
